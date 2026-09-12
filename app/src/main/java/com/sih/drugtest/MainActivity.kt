@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,9 +18,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.sih.drugtest.ui.screens.HomeScreen
+import com.sih.drugtest.ui.screens.SelectTestScreen
 import com.sih.drugtest.ui.theme.DrugTestAppTheme
 
+
+// Structure for records that will later come from the database
+
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -33,61 +38,60 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
 @Composable
 fun DrugTestApp() {
-    var currentScreen by remember { mutableStateOf("home") }
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
-        when (currentScreen) {
-            "home" -> HomeScreen(
-                onStartClick = { currentScreen = "selectTest" }
-            )
+    var currentScreen by remember {
+        mutableStateOf("home")
+    }
 
-            "selectTest" -> SelectTestScreen(
-                onTestSelected = { currentScreen = "capture" },
-                onBackClick = { currentScreen = "home" }
-            )
+    when (currentScreen) {
 
-            "capture" -> CaptureScreen(
-                onBackClick = { currentScreen = "selectTest" }
-            )
-        }
+        "home" -> HomeScreen(
+            recentRecords = emptyList(),
+            onStartClick = {
+                currentScreen = "selectTest"
+            },
+            onTestsClick = {
+                currentScreen = "selectTest"
+            }
+        )
+
+        "selectTest" -> SelectTestScreen(
+            protocols = emptyList(),
+
+            onTestSelected = { _ ->
+                currentScreen = "capture"
+            },
+
+            onBackClick = {
+                currentScreen = "home"
+            },
+
+            onHomeClick = {
+                currentScreen = "home"
+            },
+
+            onTestsClick = {
+                currentScreen = "selectTest"
+            }
+        )
+
+        "capture" -> CaptureScreen(
+            onBackClick = {
+                currentScreen = "selectTest"
+            }
+        )
     }
 }
 
-@Composable
-fun HomeScreen(onStartClick: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "Field Drug Test",
-            style = MaterialTheme.typography.headlineLarge
-        )
-
-        Text(
-            text = "Digital colour analysis and record system",
-            modifier = Modifier.padding(top = 12.dp, bottom = 24.dp)
-        )
-
-        Button(onClick = onStartClick) {
-            Text("Start New Test")
-        }
-    }
-}
 
 @Composable
-fun SelectTestScreen(
-    onTestSelected: () -> Unit,
+fun CaptureScreen(
     onBackClick: () -> Unit
 ) {
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -95,36 +99,7 @@ fun SelectTestScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "Select Test",
-            style = MaterialTheme.typography.headlineLarge
-        )
 
-        Button(
-            onClick = onTestSelected,
-            modifier = Modifier.padding(top = 24.dp)
-        ) {
-            Text("Test Protocol 1")
-        }
-
-        Button(
-            onClick = onBackClick,
-            modifier = Modifier.padding(top = 12.dp)
-        ) {
-            Text("Back")
-        }
-    }
-}
-
-@Composable
-fun CaptureScreen(onBackClick: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
         Text(
             text = "Capture Test Image",
             style = MaterialTheme.typography.headlineLarge
@@ -132,10 +107,15 @@ fun CaptureScreen(onBackClick: () -> Unit) {
 
         Text(
             text = "Camera will be added here.",
-            modifier = Modifier.padding(top = 12.dp, bottom = 24.dp)
+            modifier = Modifier.padding(
+                top = 12.dp,
+                bottom = 24.dp
+            )
         )
 
-        Button(onClick = onBackClick) {
+        Button(
+            onClick = onBackClick
+        ) {
             Text("Back")
         }
     }
