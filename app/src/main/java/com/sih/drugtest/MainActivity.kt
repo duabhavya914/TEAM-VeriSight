@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.sih.drugtest.ui.screens.HomeScreen
 import com.sih.drugtest.ui.screens.SelectTestScreen
 import com.sih.drugtest.ui.theme.DrugTestAppTheme
+import com.sih.drugtest.ui.screens.TestHistoryScreen
 
 
 // Structure for records that will later come from the database
@@ -55,6 +56,9 @@ fun DrugTestApp() {
             },
             onTestsClick = {
                 currentScreen = "selectTest"
+            },
+            onHistoryClick = {
+                currentScreen = "history"
             }
         )
 
@@ -96,6 +100,23 @@ fun DrugTestApp() {
                 aiAnalysisInProgress = true,
                 resultGenerated = false
             )
+        )
+        "history" -> TestHistoryScreen(
+            onBackClick = {
+                currentScreen = "home"
+            },
+
+            onRecordClick = { record ->
+                // Record Details screen will be connected later
+            },
+
+            onHomeClick = {
+                currentScreen = "home"
+            },
+
+            onTestsClick = {
+                currentScreen = "selectTest"
+            }
         )
     }
 }

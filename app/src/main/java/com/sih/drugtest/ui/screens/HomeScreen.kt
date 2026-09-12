@@ -58,7 +58,8 @@ import com.sih.drugtest.ui.theme.SecondaryText
 fun HomeScreen(
     recentRecords: List<TestRecord>,
     onStartClick: () -> Unit,
-    onTestsClick: () -> Unit
+    onTestsClick: () -> Unit,
+    onHistoryClick: () -> Unit
 ) {
     Scaffold(
         containerColor = NavyBackground,
@@ -66,7 +67,8 @@ fun HomeScreen(
             AppBottomNavigation(
                 selectedTab = "home",
                 onHomeClick = {},
-                onTestsClick = onTestsClick
+                onTestsClick = onTestsClick,
+                onHistoryClick = onHistoryClick
             )
         }
     ) { innerPadding ->
