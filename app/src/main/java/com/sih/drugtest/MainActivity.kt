@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.sih.drugtest.ui.screens.HomeScreen
 import com.sih.drugtest.ui.screens.SelectTestScreen
 import com.sih.drugtest.ui.theme.DrugTestAppTheme
+import com.sih.drugtest.ui.screens.CaptureScreen
 
 
 // Structure for records that will later come from the database
@@ -87,36 +88,3 @@ fun DrugTestApp() {
 }
 
 
-@Composable
-fun CaptureScreen(
-    onBackClick: () -> Unit
-) {
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        Text(
-            text = "Capture Test Image",
-            style = MaterialTheme.typography.headlineLarge
-        )
-
-        Text(
-            text = "Camera will be added here.",
-            modifier = Modifier.padding(
-                top = 12.dp,
-                bottom = 24.dp
-            )
-        )
-
-        Button(
-            onClick = onBackClick
-        ) {
-            Text("Back")
-        }
-    }
-}
