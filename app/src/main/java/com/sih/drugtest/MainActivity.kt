@@ -81,7 +81,21 @@ fun DrugTestApp() {
         "capture" -> CaptureScreen(
             onBackClick = {
                 currentScreen = "selectTest"
+            },
+            onCaptureClick = {
+                currentScreen = "analysis"
             }
+        )
+
+        "analysis" -> AnalysisScreen(
+            state = AnalysisState(
+                progress = 78,
+                imageCaptured = true,
+                referenceCardDetected = true,
+                colourExtracted = true,
+                aiAnalysisInProgress = true,
+                resultGenerated = false
+            )
         )
     }
 }
@@ -89,7 +103,8 @@ fun DrugTestApp() {
 
 @Composable
 fun CaptureScreen(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onCaptureClick: () -> Unit
 ) {
 
     Column(
