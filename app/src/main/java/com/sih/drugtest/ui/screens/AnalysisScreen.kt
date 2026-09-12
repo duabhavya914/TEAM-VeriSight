@@ -1,4 +1,4 @@
-package com.sih.drugtest
+package com.sih.drugtest.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

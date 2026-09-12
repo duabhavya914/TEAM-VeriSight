@@ -1,4 +1,4 @@
-package com.sih.drugtest
+package com.sih.drugtest.ui.screens
 
 data class AnalysisState(
     val progress: Int,

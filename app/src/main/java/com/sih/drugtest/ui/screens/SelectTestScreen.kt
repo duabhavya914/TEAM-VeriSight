@@ -37,10 +37,6 @@ import androidx.compose.foundation.background
 import androidx.compose.material3.Scaffold
 import com.sih.drugtest.ui.components.AppBottomNavigation
 
-import androidx.compose.foundation.Canvas
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.StrokeCap
-
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.OutlinedTextField
@@ -55,6 +51,8 @@ import com.sih.drugtest.model.TestProtocol
 
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+
+import androidx.compose.material.icons.outlined.VerifiedUser
 
 import kotlin.math.cos
 import kotlin.math.sin
@@ -72,7 +70,6 @@ fun SelectTestScreen(
     }
 
     val filteredProtocols = protocols.filter { protocol ->
-
         protocol.name.contains(
             searchQuery,
             ignoreCase = true
@@ -98,197 +95,182 @@ fun SelectTestScreen(
         }
     ) { innerPadding ->
 
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(NavyBackground)
                 .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp)
+                .padding(top = 20.dp, bottom = 20.dp)
         ) {
 
-            SelectTestMoleculeBackground()
+            // -------------------------
+            // HEADER
+            // -------------------------
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 20.dp)
-                    .padding(top = 20.dp, bottom = 20.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
 
-                // Header
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                Surface(
+                    modifier = Modifier
+                        .size(42.dp)
+                        .clickable(onClick = onBackClick),
+                    shape = CircleShape,
+                    color = Color(0xFF0B3455),
+                    border = BorderStroke(
+                        width = 1.dp,
+                        color = CyanAccent
+                    )
                 ) {
-
-                    Surface(
-                        modifier = Modifier
-                            .size(42.dp)
-                            .clickable(onClick = onBackClick),
-                        shape = CircleShape,
-                        color = NavyBackground,
-                        border = BorderStroke(
-                            width = 1.dp,
-                            color = CyanAccent
-                        )
+                    Box(
+                        contentAlignment = Alignment.Center
                     ) {
-                        Box(
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.ArrowBack,
-                                contentDescription = "Back",
-                                tint = CyanAccent,
-                                modifier = Modifier.size(22.dp)
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.width(14.dp))
-
-                    Column {
-                        Text(
-                            text = "Select Test",
-                            color = Ivory,
-                            fontSize = 21.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-
-                        Text(
-                            text = "Choose a field-test protocol",
-                            color = SecondaryText,
-                            fontSize = 11.sp
+                        Icon(
+                            imageVector = Icons.Outlined.ArrowBack,
+                            contentDescription = "Back",
+                            tint = CyanAccent,
+                            modifier = Modifier.size(22.dp)
                         )
                     }
                 }
 
-                Spacer(modifier = Modifier.height(26.dp))
+                Spacer(modifier = Modifier.width(14.dp))
+
+                Column {
+                    Text(
+                        text = "Select Test",
+                        color = Ivory,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(26.dp))
+
+            Text(
+                text = "Choose the field-test protocol you are using.",
+                color = SecondaryText,
+                fontSize = 17.sp,
+                lineHeight = 26.sp
+            )
+
+            Spacer(modifier = Modifier.height(18.dp))
+
+
+            // -------------------------
+            // SEARCH BAR
+            // -------------------------
+
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = {
+                    searchQuery = it
+                },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = {
+                    Text(
+                        text = "Search test protocols",
+                        color = SecondaryText,
+                        fontSize = 14.sp
+                    )
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.Search,
+                        contentDescription = "Search",
+                        tint = Ivory,
+                        modifier = Modifier.size(23.dp)
+                    )
+                },
+                singleLine = true,
+                shape = RoundedCornerShape(18.dp),
+
+                colors = OutlinedTextFieldDefaults.colors(
+
+                    focusedTextColor = Ivory,
+                    unfocusedTextColor = Ivory,
+
+                    cursorColor = CyanAccent,
+
+                    focusedBorderColor = CyanAccent,
+                    unfocusedBorderColor = CyanAccent.copy(alpha = 0.75f),
+
+                    focusedContainerColor = Color(0xFF0B3455),
+                    unfocusedContainerColor = Color(0xFF0B3455)
+                )
+            )
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+
+            // -------------------------
+            // INSTRUCTION STRIP
+            // -------------------------
+
+            ProtocolInfoBanner()
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+
+            // -------------------------
+            // AVAILABLE PROTOCOLS
+            // -------------------------
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Surface(
+                    modifier = Modifier
+                        .width(4.dp)
+                        .height(25.dp),
+                    shape = RoundedCornerShape(4.dp),
+                    color = CyanAccent
+                ) {}
+
+                Spacer(modifier = Modifier.width(10.dp))
 
                 Text(
-                    text = "Choose the field-test protocol you are using.",
-                    color = SecondaryText,
-                    fontSize = 15.sp,
-                    lineHeight = 21.sp
+                    text = "Available Protocols",
+                    color = Ivory,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f)
                 )
 
-                Spacer(modifier = Modifier.height(20.dp))
-
-                // Search
-                OutlinedTextField(
-                    value = searchQuery,
-                    onValueChange = {
-                        searchQuery = it
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    placeholder = {
-                        Text(
-                            text = "Search test protocols",
-                            color = SecondaryText,
-                            fontSize = 14.sp
-                        )
-                    },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Outlined.Search,
-                            contentDescription = "Search",
-                            tint = Ivory,
-                            modifier = Modifier.size(24.dp)
-                        )
-                    },
-                    singleLine = true,
-                    shape = RoundedCornerShape(16.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = Ivory,
-                        unfocusedTextColor = Ivory,
-                        cursorColor = CyanAccent,
-                        focusedBorderColor = CyanAccent,
-                        unfocusedBorderColor = CyanAccent,
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent
-                    )
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Information box
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    color = Ivory
-                ) {
-                    Row(
-                        modifier = Modifier.padding(
-                            horizontal = 15.dp,
-                            vertical = 13.dp
-                        ),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-
-                        Surface(
-                            modifier = Modifier.size(30.dp),
-                            shape = CircleShape,
-                            color = NavyBackground
-                        ) {
-                            Box(
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Info,
-                                    contentDescription = "Information",
-                                    tint = Ivory,
-                                    modifier = Modifier.size(18.dp)
-                                )
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.width(11.dp))
-
-                        Text(
-                            text = "Select the protocol that matches your physical test kit.",
-                            color = NavyBackground,
-                            fontSize = 12.sp,
-                            lineHeight = 17.sp
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Available Protocols heading
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                if (protocols.isNotEmpty()) {
 
                     Text(
-                        text = "Available Protocols",
-                        color = Ivory,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.weight(1f)
+                        text = "${filteredProtocols.size} protocols",
+                        color = SecondaryText,
+                        fontSize = 13.sp
                     )
+                }
+            }
 
-                    if (protocols.isNotEmpty()) {
-                        Text(
-                            text = "${filteredProtocols.size} protocols",
-                            color = SecondaryText,
-                            fontSize = 12.sp
-                        )
-                    }
+            Spacer(modifier = Modifier.height(14.dp))
+
+
+            // -------------------------
+            // DATABASE CONTENT
+            // -------------------------
+
+            when {
+
+                protocols.isEmpty() -> {
+                    NoProtocolsAvailable()
                 }
 
-                Spacer(modifier = Modifier.height(14.dp))
-
-                // Database-driven section
-                if (protocols.isEmpty()) {
-
-                    NoProtocolsAvailable()
-
-                } else if (filteredProtocols.isEmpty()) {
-
+                filteredProtocols.isEmpty() -> {
                     NoProtocolsFound()
+                }
 
-                } else {
+                else -> {
 
                     filteredProtocols.forEach { protocol ->
 
@@ -299,46 +281,52 @@ fun SelectTestScreen(
                             }
                         )
 
-                        Spacer(modifier = Modifier.height(12.dp))
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(18.dp),
-                    color = Color(0xFF0B3455)
-                ) {
-                    Row(
-                        modifier = Modifier.padding(
-                            horizontal = 15.dp,
-                            vertical = 13.dp
-                        ),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-
-                        Icon(
-                            imageVector = Icons.Default.Shield,
-                            contentDescription = "Protocol security",
-                            tint = CyanAccent,
-                            modifier = Modifier.size(22.dp)
-                        )
-
-                        Spacer(modifier = Modifier.width(11.dp))
-
-                        Text(
-                            text = "Protocols are version-controlled for consistent results.",
-                            color = SecondaryText,
-                            fontSize = 12.sp,
-                            lineHeight = 18.sp
+                        Spacer(
+                            modifier = Modifier.height(12.dp)
                         )
                     }
                 }
             }
+
+            Spacer(modifier = Modifier.height(18.dp))
+
+
+            // -------------------------
+            // SECURITY / VERSION STRIP
+            // -------------------------
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = 14.dp,
+                        vertical = 12.dp
+                    ),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Icon(
+                    imageVector = Icons.Outlined.VerifiedUser,
+                    contentDescription = "Version controlled protocols",
+                    tint = Ivory,
+                    modifier = Modifier.size(30.dp)
+                )
+
+                Spacer(modifier = Modifier.width(14.dp))
+
+                Text(
+                    text = "Protocols are version-controlled for consistent results.",
+                    color = SecondaryText,
+                    fontSize = 13.sp,
+                    lineHeight = 19.sp
+                )
+            }
+
+
+            }
         }
     }
-}
+
 
 @Composable
 fun ProtocolCard(
@@ -422,227 +410,151 @@ fun ProtocolCard(
 fun NoProtocolsAvailable() {
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(18.dp),
-        color = Ivory.copy(alpha = 0.96f)
+        shape = RoundedCornerShape(20.dp),
+        color = Color(0xFFF8F3E8),
+        border = BorderStroke(
+            width = 1.dp,
+            color = Color(0xFFE9DFC9)
+        )
     ) {
-        Column(
+        Row(
             modifier = Modifier.padding(
-                horizontal = 18.dp,
-                vertical = 20.dp
+                horizontal = 16.dp,
+                vertical = 18.dp
             ),
-            horizontalAlignment = Alignment.CenterHorizontally
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            Surface(
+                modifier = Modifier.size(64.dp),
+                shape = RoundedCornerShape(16.dp),
+                color = Color(0xFFE3F1EC)
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Science,
+                        contentDescription = null,
+                        tint = NavyBackground,
+                        modifier = Modifier.size(30.dp)
+                    )
+                }
+            }
 
-            Icon(
-                imageVector = Icons.Outlined.Science,
-                contentDescription = null,
-                tint = NavyBackground,
-                modifier = Modifier.size(30.dp)
-            )
+            Spacer(modifier = Modifier.width(16.dp))
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = "No protocols available",
+                    color = NavyBackground,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
 
-            Text(
-                text = "No protocols available",
-                color = NavyBackground,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Bold
-            )
+                Spacer(modifier = Modifier.height(5.dp))
 
-            Spacer(modifier = Modifier.height(3.dp))
-
-            Text(
-                text = "Protocols loaded from the database will appear here.",
-                color = Color(0xFF607080),
-                fontSize = 11.sp
-            )
+                Text(
+                    text = "Protocols loaded from the database will appear here.",
+                    color = Color(0xFF607080),
+                    fontSize = 14.sp,
+                    lineHeight = 19.sp
+                )
+            }
         }
     }
 }
 
 @Composable
 fun NoProtocolsFound() {
+
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(18.dp),
-        color = Ivory.copy(alpha = 0.96f)
-    ) {
-        Text(
-            text = "No matching protocols found.",
-            color = NavyBackground,
-            fontSize = 13.sp,
-            modifier = Modifier.padding(18.dp)
+        color = Color(0xFF0B3455),
+        border = BorderStroke(
+            width = 1.dp,
+            color = CyanAccent.copy(alpha = 0.30f)
         )
+    ) {
+
+        Row(
+            modifier = Modifier.padding(
+                horizontal = 16.dp,
+                vertical = 15.dp
+            ),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Icon(
+                imageVector = Icons.Outlined.Search,
+                contentDescription = null,
+                tint = CyanAccent,
+                modifier = Modifier.size(22.dp)
+            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Column {
+
+                Text(
+                    text = "No matching protocols",
+                    color = Ivory,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Text(
+                    text = "Try another protocol name or category.",
+                    color = SecondaryText,
+                    fontSize = 11.sp
+                )
+            }
+        }
     }
 }
 
 @Composable
-fun SelectTestMoleculeBackground() {
-
-    Canvas(
-        modifier = Modifier.fillMaxSize()
+fun ProtocolInfoBanner() {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(18.dp),
+        color = Color(0xFFF0E3CB)
     ) {
-
-        val lineColour = CyanAccent.copy(alpha = 0.16f)
-        val nodeColour = CyanAccent.copy(alpha = 0.26f)
-
-        val root3 = 1.732f
-
-        fun createHexagon(
-            center: Offset,
-            radius: Float
-        ): List<Offset> {
-            return List(6) { index ->
-                val angle = Math.toRadians((60.0 * index) - 30.0)
-                Offset(
-                    x = center.x + radius * cos(angle).toFloat(),
-                    y = center.y + radius * sin(angle).toFloat()
-                )
-            }
-        }
-
-        fun drawHexagon(
-            center: Offset,
-            radius: Float
+        Row(
+            modifier = Modifier.padding(
+                horizontal = 16.dp,
+                vertical = 15.dp
+            ),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            val points = createHexagon(center, radius)
-
-            points.forEachIndexed { index, point ->
-                val next = points[(index + 1) % points.size]
-
-                drawLine(
-                    color = lineColour,
-                    start = point,
-                    end = next,
-                    strokeWidth = 5.8f,
-                    cap = StrokeCap.Round
-                )
-
-                drawCircle(
-                    color = nodeColour,
-                    radius = 7.8f,
-                    center = point
-                )
+            Surface(
+                modifier = Modifier.size(36.dp),
+                shape = CircleShape,
+                color = NavyBackground
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Info,
+                        contentDescription = "Information",
+                        tint = Ivory,
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
             }
-        }
 
-        fun drawBond(
-            start: Offset,
-            end: Offset
-        ) {
-            drawLine(
-                color = lineColour,
-                start = start,
-                end = end,
-                strokeWidth = 5.8f,
-                cap = StrokeCap.Round
+            Spacer(modifier = Modifier.width(14.dp))
+
+            Text(
+                text = "Select the protocol that matches your physical test kit.",
+                color = NavyBackground,
+                fontSize = 13.sp,
+                lineHeight = 19.sp,
+                fontWeight = FontWeight.Medium
             )
         }
-
-        // =========================
-        // TOP RIGHT CLUSTER
-        // slightly smaller
-        // =========================
-
-        val rTop = size.width * 0.060f
-
-        val topMain = Offset(
-            x = size.width * 0.84f,
-            y = size.height * 0.17f
-        )
-
-        val topRight = Offset(
-            x = topMain.x + root3 * rTop,
-            y = topMain.y
-        )
-
-        val topLower = Offset(
-            x = topMain.x + (root3 / 2f) * rTop,
-            y = topMain.y + 1.5f * rTop
-        )
-
-        drawHexagon(topMain, rTop)
-        drawHexagon(topRight, rTop)
-        drawHexagon(topLower, rTop)
-
-        val topBranch1 = Offset(
-            x = topMain.x - (root3 / 2f) * rTop,
-            y = topMain.y - 1.5f * rTop
-        )
-
-        val topBranch2 = Offset(
-            x = topBranch1.x,
-            y = topBranch1.y - 26f
-        )
-
-        drawBond(
-            start = Offset(
-                x = topMain.x - (root3 / 2f) * rTop,
-                y = topMain.y - 0.5f * rTop
-            ),
-            end = topBranch1
-        )
-
-        drawBond(
-            start = topBranch1,
-            end = topBranch2
-        )
-
-        drawCircle(
-            color = nodeColour,
-            radius = 7.8f,
-            center = topBranch1
-        )
-
-        drawCircle(
-            color = nodeColour,
-            radius = 8.5f,
-            center = topBranch2
-        )
-
-        // =========================
-        // BOTTOM RIGHT CLUSTER
-        // pushed more to the right
-        // =========================
-
-        val rBottom = size.width * 0.068f
-
-        val bottomMain = Offset(
-            x = size.width * 0.89f,
-            y = size.height * 0.73f
-        )
-
-        val bottomRight = Offset(
-            x = bottomMain.x + root3 * rBottom,
-            y = bottomMain.y
-        )
-
-        val bottomLowerLeft = Offset(
-            x = bottomMain.x - (root3 / 2f) * rBottom,
-            y = bottomMain.y + 1.5f * rBottom
-        )
-
-        drawHexagon(bottomMain, rBottom)
-        drawHexagon(bottomRight, rBottom)
-        drawHexagon(bottomLowerLeft, rBottom)
-
-        val bottomBranch = Offset(
-            x = bottomMain.x - (root3 / 2f) * rBottom,
-            y = bottomMain.y - 1.5f * rBottom
-        )
-
-        drawBond(
-            start = Offset(
-                x = bottomMain.x - (root3 / 2f) * rBottom,
-                y = bottomMain.y - 0.5f * rBottom
-            ),
-            end = bottomBranch
-        )
-
-        drawCircle(
-            color = nodeColour,
-            radius = 7.8f,
-            center = bottomBranch
-        )
     }
 }
