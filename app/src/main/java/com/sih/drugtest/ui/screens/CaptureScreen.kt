@@ -14,7 +14,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun CaptureScreen(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onCaptureClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
