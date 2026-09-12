@@ -59,7 +59,9 @@ fun HomeScreen(
     recentRecords: List<TestRecord>,
     onStartClick: () -> Unit,
     onTestsClick: () -> Unit,
-    onHistoryClick: () -> Unit
+    onHistoryClick: () -> Unit,
+    onSettingsClick: () -> Unit = {},
+    onRecordClick: (TestRecord) -> Unit = {}
 ) {
     Scaffold(
         containerColor = NavyBackground,
@@ -68,7 +70,8 @@ fun HomeScreen(
                 selectedTab = "home",
                 onHomeClick = {},
                 onTestsClick = onTestsClick,
-                onHistoryClick = onHistoryClick
+                onHistoryClick = onHistoryClick,
+                onSettingsClick = onSettingsClick
             )
         }
     ) { innerPadding ->
@@ -100,7 +103,9 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(14.dp))
 
             RecentActivitySection(
-                records = recentRecords
+                records = recentRecords,
+                onRecordClick = onRecordClick,
+                onViewAllClick = onHistoryClick
             )
         }
     }
@@ -343,7 +348,9 @@ fun StartTestCard(
 
 @Composable
 fun RecentActivitySection(
-    records: List<TestRecord>
+    records: List<TestRecord>,
+    onRecordClick: (TestRecord) -> Unit = {},
+    onViewAllClick: () -> Unit = {}
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -371,7 +378,7 @@ fun RecentActivitySection(
                 )
 
                 if (records.isNotEmpty()) {
-                    TextButton(onClick = {}) {
+                    TextButton(onClick = onViewAllClick) {
                         Text(
                             text = "View all",
                             color = Color(0xFF075BBB),
@@ -391,7 +398,10 @@ fun RecentActivitySection(
 
                 records.take(2).forEachIndexed { index, record ->
 
-                    RecentRecordRow(record)
+                    RecentRecordRow(
+                        record = record,
+                        onClick = { onRecordClick(record) }
+                    )
 
                     if (index < records.take(2).lastIndex) {
                         HorizontalDivider(
@@ -448,10 +458,13 @@ fun EmptyRecentActivity() {
 
 @Composable
 fun RecentRecordRow(
-    record: TestRecord
+    record: TestRecord,
+    onClick: () -> Unit = {}
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
     ) {
 
         Text(

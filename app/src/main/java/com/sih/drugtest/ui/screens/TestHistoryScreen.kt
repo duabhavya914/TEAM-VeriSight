@@ -16,12 +16,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,6 +35,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.sih.drugtest.ui.components.AppBottomNavigation
 
 data class TestHistoryRecord(
     val testName: String,
@@ -43,10 +45,13 @@ data class TestHistoryRecord(
 
 @Composable
 fun TestHistoryScreen(
+    customRecords: List<TestHistoryRecord> = emptyList(),
     onBackClick: () -> Unit,
     onRecordClick: (TestHistoryRecord) -> Unit = {},
     onHomeClick: () -> Unit = {},
-    onTestsClick: () -> Unit = {}
+    onTestsClick: () -> Unit = {},
+    onHistoryClick: () -> Unit = {},
+    onSettingsClick: () -> Unit = {}
 ) {
 
     var searchQuery by remember {
@@ -57,7 +62,7 @@ fun TestHistoryScreen(
         mutableStateOf("All")
     }
 
-    val records = remember {
+    val defaultRecords = remember {
         listOf(
             TestHistoryRecord(
                 testName = "Marquis Test",
@@ -87,6 +92,8 @@ fun TestHistoryScreen(
         )
     }
 
+    val records = if (customRecords.isNotEmpty()) customRecords + defaultRecords else defaultRecords
+
     val filteredRecords = records.filter { record ->
 
         val matchesSearch =
@@ -102,134 +109,142 @@ fun TestHistoryScreen(
         matchesSearch && matchesFilter
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-    ) {
+    Scaffold(
+        bottomBar = {
+            AppBottomNavigation(
+                selectedTab = "history",
+                onHomeClick = onHomeClick,
+                onTestsClick = onTestsClick,
+                onHistoryClick = onHistoryClick,
+                onSettingsClick = onSettingsClick
+            )
+        }
+    ) { innerPadding ->
 
-        // Header
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    start = 8.dp,
-                    end = 16.dp,
-                    top = 16.dp
-                ),
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxSize()
+                .padding(innerPadding)
+                .background(MaterialTheme.colorScheme.background)
         ) {
 
-            IconButton(
-                onClick = onBackClick
+            // Header
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = 8.dp,
+                        end = 16.dp,
+                        top = 16.dp
+                    ),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Back"
+
+                IconButton(
+                    onClick = onBackClick
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back"
+                    )
+                }
+
+                Text(
+                    text = "Test History",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
                 )
             }
 
-            Text(
-                text = "Test History",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
-        // Search bar
-        OutlinedTextField(
-            value = searchQuery,
-            onValueChange = {
-                searchQuery = it
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            placeholder = {
-                Text("Search records...")
-            },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Search"
-                )
-            },
-            singleLine = true,
-            shape = RoundedCornerShape(12.dp)
-        )
-
-        Spacer(
-            modifier = Modifier.height(12.dp)
-        )
-
-        // Filter buttons
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-
-            FilterChip(
-                text = "All",
-                selected = selectedFilter == "All",
-                onClick = {
-                    selectedFilter = "All"
-                }
+            // Search bar
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = {
+                    searchQuery = it
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                placeholder = {
+                    Text("Search records...")
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Search"
+                    )
+                },
+                singleLine = true,
+                shape = RoundedCornerShape(12.dp)
             )
 
-            FilterChip(
-                text = "Positive",
-                selected = selectedFilter == "Positive",
-                onClick = {
-                    selectedFilter = "Positive"
-                }
+            Spacer(
+                modifier = Modifier.height(12.dp)
             )
 
-            FilterChip(
-                text = "Negative",
-                selected = selectedFilter == "Negative",
-                onClick = {
-                    selectedFilter = "Negative"
-                }
-            )
+            // Filter buttons
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
 
-            FilterChip(
-                text = "Inconclusive",
-                selected = selectedFilter == "Inconclusive",
-                onClick = {
-                    selectedFilter = "Inconclusive"
-                }
-            )
-        }
-
-        Spacer(
-            modifier = Modifier.height(12.dp)
-        )
-
-        // History records
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-        ) {
-
-            items(filteredRecords) { record ->
-
-                TestHistoryItem(
-                    record = record,
+                FilterChip(
+                    text = "All",
+                    selected = selectedFilter == "All",
                     onClick = {
-                        onRecordClick(record)
+                        selectedFilter = "All"
+                    }
+                )
+
+                FilterChip(
+                    text = "Positive",
+                    selected = selectedFilter == "Positive",
+                    onClick = {
+                        selectedFilter = "Positive"
+                    }
+                )
+
+                FilterChip(
+                    text = "Negative",
+                    selected = selectedFilter == "Negative",
+                    onClick = {
+                        selectedFilter = "Negative"
+                    }
+                )
+
+                FilterChip(
+                    text = "Inconclusive",
+                    selected = selectedFilter == "Inconclusive",
+                    onClick = {
+                        selectedFilter = "Inconclusive"
                     }
                 )
             }
-        }
 
-        // Bottom navigation
-        HistoryBottomNavigation(
-            onHomeClick = onHomeClick,
-            onTestsClick = onTestsClick
-        )
+            Spacer(
+                modifier = Modifier.height(12.dp)
+            )
+
+            // History records
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ) {
+
+                items(filteredRecords) { record ->
+
+                    TestHistoryItem(
+                        record = record,
+                        onClick = {
+                            onRecordClick(record)
+                        }
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -352,7 +367,7 @@ fun TestHistoryItem(
 
 
 @Composable
-fun ResultBadge(
+private fun ResultBadge(
     result: String
 ) {
 
@@ -401,53 +416,6 @@ fun ResultBadge(
             color = textColor,
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold
-        )
-    }
-}
-
-
-@Composable
-fun HistoryBottomNavigation(
-    onHomeClick: () -> Unit,
-    onTestsClick: () -> Unit
-) {
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                horizontal = 24.dp,
-                vertical = 12.dp
-            ),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-
-        Text(
-            text = "⌂\nHome",
-            modifier = Modifier.clickable {
-                onHomeClick()
-            },
-            style = MaterialTheme.typography.labelSmall
-        )
-
-        Text(
-            text = "⚗\nTests",
-            modifier = Modifier.clickable {
-                onTestsClick()
-            },
-            style = MaterialTheme.typography.labelSmall
-        )
-
-        Text(
-            text = "◷\nHistory",
-            style = MaterialTheme.typography.labelSmall,
-            fontWeight = FontWeight.Bold
-        )
-
-        Text(
-            text = "☰\nMore",
-            style = MaterialTheme.typography.labelSmall
         )
     }
 }

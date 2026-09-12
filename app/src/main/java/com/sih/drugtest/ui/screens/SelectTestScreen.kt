@@ -63,7 +63,9 @@ fun SelectTestScreen(
     onTestSelected: (TestProtocol) -> Unit,
     onBackClick: () -> Unit,
     onHomeClick: () -> Unit,
-    onTestsClick: () -> Unit
+    onTestsClick: () -> Unit,
+    onHistoryClick: () -> Unit = {},
+    onSettingsClick: () -> Unit = {}
 ) {
     var searchQuery by remember {
         mutableStateOf("")
@@ -90,7 +92,9 @@ fun SelectTestScreen(
             AppBottomNavigation(
                 selectedTab = "tests",
                 onHomeClick = onHomeClick,
-                onTestsClick = onTestsClick
+                onTestsClick = onTestsClick,
+                onHistoryClick = onHistoryClick,
+                onSettingsClick = onSettingsClick
             )
         }
     ) { innerPadding ->
