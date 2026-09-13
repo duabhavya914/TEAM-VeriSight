@@ -1,6 +1,17 @@
+import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
+}
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use {
+        localProperties.load(it)
+    }
 }
 
 android {
@@ -17,6 +28,18 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField(
+            "String",
+            "SUPABASE_URL",
+            "\"${localProperties.getProperty("SUPABASE_URL")}\""
+        )
+
+        buildConfigField(
+            "String",
+            "SUPABASE_PUBLISHABLE_KEY",
+            "\"${localProperties.getProperty("SUPABASE_PUBLISHABLE_KEY")}\""
+        )
     }
 
     buildTypes {
@@ -32,6 +55,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -58,4 +82,8 @@ dependencies {
     implementation("androidx.camera:camera-camera2:1.4.2")
     implementation("androidx.camera:camera-lifecycle:1.4.2")
     implementation("androidx.camera:camera-view:1.4.2")
+
+    implementation(platform("io.github.jan-tennert.supabase:bom:3.5.0"))
+    implementation("io.github.jan-tennert.supabase:postgrest-kt")
+    implementation("io.ktor:ktor-client-android:3.0.3")
 }
