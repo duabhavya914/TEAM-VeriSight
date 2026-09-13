@@ -1,0 +1,28 @@
+# Python generated files
+__pycache__/
+*.pyc
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+
+# Gradle
+.gradle/
+build/
+**/build/
+
+# Local machine configuration
+local.properties
+
+# Android generated files
+captures/
+.externalNativeBuild/
+.cxx/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Generated APK / AAB
+*.apk
+*.aab
