@@ -26,3 +26,6 @@ Thumbs.db
 # Generated APK / AAB
 *.apk
 *.aab
+
+# Environment variables
+.env

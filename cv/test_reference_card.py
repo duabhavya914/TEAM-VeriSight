@@ -4,7 +4,7 @@ from reference_card import process_reference_card
 
 
 # Load an existing reference-card image
-image = cv2.imread("perspective_card.png")
+image = cv2.imread("../perspective_card.png")
 
 if image is None:
     raise FileNotFoundError(
