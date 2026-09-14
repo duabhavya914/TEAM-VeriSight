@@ -1,5 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.DrugTestApp" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- ===================================================== -->
+    <!-- NORMAL APP THEME                                      -->
+    <!-- No ActionBar = removes "DrugTestApp" from the top     -->
+    <!-- ===================================================== -->
+
+    <style
+        name="Theme.DrugTestApp"
+        parent="android:style/Theme.Material.Light.NoActionBar">
+
+        <item name="android:fontFamily">sans</item>
+
+        <!-- Dark status bar to match FieldTest Secure -->
+        <item name="android:statusBarColor">#073768</item>
+        <item name="android:windowLightStatusBar">false</item>
+
+        <!-- Dark navigation bar -->
+        <item name="android:navigationBarColor">#001E3C</item>
+
+        <!-- Prevent white flash -->
+        <item name="android:windowBackground">#073768</item>
+
+    </style>
+
+
+    <!-- ===================================================== -->
+    <!-- ANDROID SYSTEM STARTUP THEME                           -->
+    <!-- ===================================================== -->
+
+    <style
+        name="Theme.DrugTestApp.Splash"
+        parent="Theme.SplashScreen">
+
+        <!-- Same blue as our real splash -->
+        <item name="windowSplashScreenBackground">#073768</item>
+
+        <!--
+             Do NOT use fieldtest_logo here.
+             Android forces system splash icons into its own
+             icon mask, which caused the giant cropped square.
+        -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_empty</item>
+
+        <!-- Switch immediately to our normal NoActionBar theme -->
+        <item name="postSplashScreenTheme">@style/Theme.DrugTestApp</item>
+
+    </style>
+
 </resources>
