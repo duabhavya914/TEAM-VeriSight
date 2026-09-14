@@ -1,10 +1,10 @@
 package com.sih.drugtest.ui.components
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Science
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -23,9 +23,10 @@ fun AppBottomNavigation(
     selectedTab: String,
     onHomeClick: () -> Unit,
     onTestsClick: () -> Unit,
-    onHistoryClick: () -> Unit = {},
-    onSettingsClick: () -> Unit = {}
+    onHistoryClick: () -> Unit,
+    onProfileClick: () -> Unit
 ) {
+
     NavigationBar(
         containerColor = DarkNavy,
         tonalElevation = 0.dp
@@ -86,17 +87,17 @@ fun AppBottomNavigation(
         )
 
         NavigationBarItem(
-            selected = selectedTab == "settings",
-            onClick = onSettingsClick,
+            selected = selectedTab == "profile",
+            onClick = onProfileClick,
             icon = {
                 Icon(
-                    imageVector = Icons.Outlined.Settings,
-                    contentDescription = "Settings"
+                    imageVector = Icons.Outlined.AccountCircle,
+                    contentDescription = "Profile"
                 )
             },
             label = {
                 Text(
-                    text = "Settings",
+                    text = "Profile",
                     fontSize = 12.sp
                 )
             },

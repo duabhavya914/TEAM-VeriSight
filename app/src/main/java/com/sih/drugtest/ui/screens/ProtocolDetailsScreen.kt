@@ -63,7 +63,9 @@ fun ProtocolDetailsScreen(
     onBackClick: () -> Unit,
     onCaptureClick: () -> Unit,
     onHomeClick: () -> Unit,
-    onTestsClick: () -> Unit
+    onTestsClick: () -> Unit,
+    onHistoryClick: () -> Unit,
+    onProfileClick: () -> Unit
 ) {
 
     Scaffold(
@@ -72,7 +74,9 @@ fun ProtocolDetailsScreen(
             AppBottomNavigation(
                 selectedTab = "tests",
                 onHomeClick = onHomeClick,
-                onTestsClick = onTestsClick
+                onTestsClick = onTestsClick,
+                onHistoryClick = onHistoryClick,
+                onProfileClick = onProfileClick
             )
         }
     ) { innerPadding ->
