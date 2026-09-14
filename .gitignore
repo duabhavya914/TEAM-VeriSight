@@ -1,3 +1,7 @@
+# Python generated files
+__pycache__/
+*.pyc
+
 # Android Studio / IntelliJ
 .idea/
 *.iml
@@ -25,3 +29,9 @@ Thumbs.db
 
 # Kotlin
 .kotlin/
+# Generated APK / AAB
+*.apk
+*.aab
+
+# Environment variables
+.env

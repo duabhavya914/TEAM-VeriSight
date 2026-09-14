@@ -1,0 +1,93 @@
+import numpy as np
+
+
+# --------------------------------------------------
+# DEVELOPMENT-ONLY THRESHOLD
+# --------------------------------------------------
+# This value is NOT a validated forensic threshold.
+# It is only for prototype experiments.
+
+MAX_DELTA_E_THRESHOLD = 15.0
+
+
+def summarize_quality(results):
+    """
+    Calculate overall reference-card quality metrics.
+    """
+
+    delta_values = np.array([
+        metrics["delta_e"]
+        for metrics in results.values()
+    ])
+
+    average_delta_e = float(
+        np.mean(delta_values)
+    )
+
+    maximum_delta_e = float(
+        np.max(delta_values)
+    )
+
+    return average_delta_e, maximum_delta_e
+
+
+MAX_AVERAGE_DELTA_E = 15.0
+MAX_SINGLE_PATCH_DELTA_E = 25.0
+
+
+def decide_quality(results):
+
+    average_delta_e, maximum_delta_e = (
+        summarize_quality(results)
+    )
+
+    print(
+        f"Average Delta E: {average_delta_e:.2f}"
+    )
+
+    print(
+        f"Maximum Delta E: {maximum_delta_e:.2f}"
+    )
+
+    if average_delta_e > MAX_AVERAGE_DELTA_E:
+        return "RETAKE"
+
+    if maximum_delta_e > MAX_SINGLE_PATCH_DELTA_E:
+        return "RETAKE"
+
+    return "PASS"
+
+
+def print_quality_summary(results):
+
+    average_delta_e, maximum_delta_e = (
+        summarize_quality(results)
+    )
+
+    decision = decide_quality(
+        results
+    )
+
+    print(
+        "\n--- QUALITY SUMMARY ---"
+    )
+
+    print(
+        f"Average ΔE: "
+        f"{average_delta_e:.2f}"
+    )
+
+    print(
+        f"Maximum ΔE: "
+        f"{maximum_delta_e:.2f}"
+    )
+
+    print(
+        f"Prototype threshold: "
+        f"{MAX_DELTA_E_THRESHOLD:.2f}"
+    )
+
+    print(
+        f"QUALITY DECISION: "
+        f"{decision}"
+    )
