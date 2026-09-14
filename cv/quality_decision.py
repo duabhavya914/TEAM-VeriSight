@@ -5,7 +5,7 @@ import numpy as np
 # DEVELOPMENT-ONLY THRESHOLD
 # --------------------------------------------------
 # This value is NOT a validated forensic threshold.
-# It is only for our prototype experiments.
+# It is only for prototype experiments.
 
 MAX_DELTA_E_THRESHOLD = 15.0
 
@@ -31,20 +31,28 @@ def summarize_quality(results):
     return average_delta_e, maximum_delta_e
 
 
-def decide_quality(results):
-    """
-    Prototype quality decision.
+MAX_AVERAGE_DELTA_E = 15.0
+MAX_SINGLE_PATCH_DELTA_E = 25.0
 
-    Returns:
-        PASS  -> image can proceed to analysis
-        RETAKE -> image should be captured again
-    """
+
+def decide_quality(results):
 
     average_delta_e, maximum_delta_e = (
         summarize_quality(results)
     )
 
-    if maximum_delta_e > MAX_DELTA_E_THRESHOLD:
+    print(
+        f"Average Delta E: {average_delta_e:.2f}"
+    )
+
+    print(
+        f"Maximum Delta E: {maximum_delta_e:.2f}"
+    )
+
+    if average_delta_e > MAX_AVERAGE_DELTA_E:
+        return "RETAKE"
+
+    if maximum_delta_e > MAX_SINGLE_PATCH_DELTA_E:
         return "RETAKE"
 
     return "PASS"
@@ -56,9 +64,13 @@ def print_quality_summary(results):
         summarize_quality(results)
     )
 
-    decision = decide_quality(results)
+    decision = decide_quality(
+        results
+    )
 
-    print("\n--- QUALITY SUMMARY ---")
+    print(
+        "\n--- QUALITY SUMMARY ---"
+    )
 
     print(
         f"Average ΔE: "
